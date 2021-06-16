@@ -78,7 +78,7 @@ if(!(collision_line(x-16,y+17,x+15,y+17,objBlock,false,false))){ //if no object 
         vspeed+=grav;
     else{
         vspeed+=wallFrictionCoefficient;
-        if(wallJumpCount&lt;maxWallJumpCount &amp;&amp; (keyboard_check_pressed(vk_up)/*||keyboard_check_pressed(vk_left)||keyboard_check_pressed(vk_right)*/)){ //Jump with opposite button in comments
+        if(wallJumpCount&lt;maxWallJumpCount &amp;&amp; (keyboard_check_pressed(vk_space)/*||keyboard_check_pressed(vk_left)||keyboard_check_pressed(vk_right)*/)){ //Jump with opposite button in comments
             vspeed=-wallJumpSpeed;
             wallJumpCount+=1;
             if (collision_line(x+17,y-15,x+17,y+15,objBlock,false,false)) //right wall
@@ -87,7 +87,7 @@ if(!(collision_line(x-16,y+17,x+15,y+17,objBlock,false,false))){ //if no object 
             hspeed=wallJumpSpeed
             }
         else
-        if(wallClimbCount&lt;maxWallClimbCount &amp;&amp; keyboard_check(vk_up) and vspeed&gt;=0){
+        if(wallClimbCount&lt;maxWallClimbCount &amp;&amp; keyboard_check(vk_space) and vspeed&gt;=0){
             vspeed=-wallClimbSpeed;
             wallClimbCount+=1;
             }
@@ -133,7 +133,7 @@ if(keyboard_check(vk_down)&amp;&amp; !(collision_line(x-16,y+16,x+16,y+16,objBlo
         //vspeed+=vAccel;
 }
 else //JUMP    
-if(jumpCount&lt;maxJumpCount &amp;&amp; keyboard_check(vk_up)&amp;&amp; !(collision_line(x-15,y-16,x+15,y-16,objBlock,false,false))){
+if(jumpCount&lt;maxJumpCount &amp;&amp; keyboard_check(vk_space)&amp;&amp; !(collision_line(x-15,y-16,x+15,y-16,objBlock,false,false))){
         vspeed=-jumpSpeed;
         jumpCount+=1;
 }
