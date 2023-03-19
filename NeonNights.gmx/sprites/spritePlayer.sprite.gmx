@@ -3,12 +3,12 @@
   <type>0</type>
   <xorig>16</xorig>
   <yorigin>16</yorigin>
-  <colkind>1</colkind>
+  <colkind>0</colkind>
   <coltolerance>0</coltolerance>
-  <sepmasks>0</sepmasks>
+  <sepmasks>-1</sepmasks>
   <bboxmode>0</bboxmode>
   <bbox_left>0</bbox_left>
-  <bbox_right>31</bbox_right>
+  <bbox_right>28</bbox_right>
   <bbox_top>0</bbox_top>
   <bbox_bottom>31</bbox_bottom>
   <HTile>0</HTile>
@@ -21,5 +21,40 @@
   <height>32</height>
   <frames>
     <frame index="0">images\spritePlayer_0.png</frame>
+    <frame index="1">images\spritePlayer_1.png</frame>
+    <frame index="2">images\spritePlayer_2.png</frame>
+    <frame index="3">images\spritePlayer_3.png</frame>
+    <frame index="4">images\spritePlayer_4.png</frame>
+    <frame index="5">images\spritePlayer_5.png</frame>
+    <frame index="6">images\spritePlayer_6.png</frame>
+    <frame index="7">images\spritePlayer_7.png</frame>
+    <frame index="8">images\spritePlayer_8.png</frame>
+    <frame index="9">images\spritePlayer_9.png</frame>
+    <frame index="10">images\spritePlayer_10.png</frame>
+    <frame index="11">images\spritePlayer_11.png</frame>
+    <frame index="12">images\spritePlayer_12.png</frame>
+    <frame index="13">images\spritePlayer_13.png</frame>
+    <frame index="14">images\spritePlayer_14.png</frame>
+    <frame index="15">images\spritePlayer_15.png</frame>
+    <frame index="16">images\spritePlayer_16.png</frame>
+    <frame index="17">images\spritePlayer_17.png</frame>
+    <frame index="18">images\spritePlayer_18.png</frame>
+    <frame index="19">images\spritePlayer_19.png</frame>
+    <frame index="20">images\spritePlayer_20.png</frame>
+    <frame index="21">images\spritePlayer_21.png</frame>
+    <frame index="22">images\spritePlayer_22.png</frame>
+    <frame index="23">images\spritePlayer_23.png</frame>
+    <frame index="24">images\spritePlayer_24.png</frame>
+    <frame index="25">images\spritePlayer_25.png</frame>
+    <frame index="26">images\spritePlayer_26.png</frame>
+    <frame index="27">images\spritePlayer_27.png</frame>
+    <frame index="28">images\spritePlayer_28.png</frame>
+    <frame index="29">images\spritePlayer_29.png</frame>
+    <frame index="30">images\spritePlayer_30.png</frame>
+    <frame index="31">images\spritePlayer_31.png</frame>
+    <frame index="32">images\spritePlayer_32.png</frame>
+    <frame index="33">images\spritePlayer_33.png</frame>
+    <frame index="34">images\spritePlayer_34.png</frame>
+    <frame index="35">images\spritePlayer_35.png</frame>
   </frames>
 </sprite>

@@ -9,6 +9,7 @@
     <sprite>sprites\spriteBlock</sprite>
     <sprite>sprites\spriteDamageBlock</sprite>
     <sprite>sprites\spritePlayer</sprite>
+    <sprite>sprites\sprite7</sprite>
     <sprite>sprites\spriteParticle</sprite>
     <sprite>sprites\spriteHealth</sprite>
     <sprite>sprites\spriteStamina</sprite>
@@ -19,6 +20,7 @@
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
+    <script>scripts\collisions.gml</script>
     <script>scripts\particles.gml</script>
   </scripts>
   <fonts name="fonts">
