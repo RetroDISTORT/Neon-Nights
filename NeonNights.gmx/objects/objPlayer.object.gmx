@@ -40,20 +40,20 @@ state                       = "floor"
 maxHealth                   = 100;
 maxVspeed                   = 31;
 maxHspeed                   = 10;//15;
-hAccelAir                   = .3;
+hAccelAir                   = .1;
 hAccelGround                = 1;
 maxJumpCount                = 1;
-jumpSpeed                   = 10;//10;
+jumpSpeed                   = 12;//10;
 maxWallJumpCount            = 100;//3;
-wallJumpSpeed               = 10//5;
-maxWallClimbCount           = 100;//3;
-wallClimbSpeed              = 10//5;
+wallJumpSpeed               = 7.5//5;
+maxWallClimbCount           = 0;//3;
+wallClimbSpeed              = 2//5;
 
 /* ENVIORNMENTAL */
 inst                        = instance_id;
 grav                        =  1;
 groundFrictionCoefficient   = .4;
-wallFrictionCoefficient     = .4;
+wallFrictionCoefficient     = 1.6;
 bounceCoefficient           = 0;  
 
 /* Animation */
@@ -96,7 +96,8 @@ if(!bottom_collision){ //if no object is underneath
     if(!wall_collision &amp;&amp; vspeed&lt;maxVspeed)//If next to a wall
         vspeed+=grav;
     else{
-        vspeed+=wallFrictionCoefficient;
+         if (vspeed&lt;=0)
+            vspeed+=wallFrictionCoefficient;
         
         if(wallJumpCount&lt;maxWallJumpCount &amp;&amp; (keyboard_check_pressed(vk_space)/*||keyboard_check_pressed(vk_left)||keyboard_check_pressed(vk_right)*/)){ //Jump with opposite button in comments
             vspeed=-wallJumpSpeed;
@@ -200,7 +201,7 @@ if(bottom_collision){ /*running animation between 5-14*/
     }
 }
     
-if(!bottom_collision &amp;&amp; wall_collision){
+if(!bottom_collision &amp;&amp; wall_collision &amp;&amp; vspeed&lt;=0){
     image_index  = 32;
     if (right_collision)   
        image_xscale = -1;
@@ -212,14 +213,6 @@ if(!bottom_collision &amp;&amp; !wall_collision){
     image_index += 3 * (vspeed+hspeed)/(maxHspeed+maxVspeed) ;
     if (image_index &gt; 24 || image_index &lt; 23)
             image_index = 23;
-    
-}
-
-if(state == "running"){
-    
-}
-
-if(state == "running"){
     
 }
 </string>
