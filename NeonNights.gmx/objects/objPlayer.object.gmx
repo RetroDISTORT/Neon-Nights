@@ -53,13 +53,19 @@ wallClimbSpeed              = 2//5;
 /* ENVIORNMENTAL */
 inst                        = instance_id;
 grav                        =  1;
-groundFrictionCoefficient   = .4;
+groundFrictionCoefficient   = .6;
 wallFrictionCoefficient     = .2;
 bounceCoefficient           = 0;  
 
-/* Animation */
+/* ANIMATION */
 image_index = 6;
 image_speed = 0;
+
+/* COLLISION BOX (From center)*/
+collisionWidth       = 16
+collisionHeight      = 32
+collisionVertical   = collisionHeight/2
+collisionHorizontal = collisionWidth/2
 
 /* OTHER */
 debug                       = 0;
@@ -88,16 +94,33 @@ debug2                      = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>bottom_collision            = collision_rectangle(x-16,y+17,x+15,y+17,objBlock,false,true)
-top_collision               = collision_rectangle(x-15,y-16,x+15,y-16,objBlock,false,true)
-//wall_collision              = collision_line(x-17,y+17,x+17,y+17,objBlock,false,true) //collision left or right
-right_collision             = collision_rectangle(x+17,y-15,x+17,y+15,objBlock,false,true)
-left_collision              = collision_rectangle(x-17,y-15,x-17,y+15,objBlock,false,true)
+            <string>bottom_collision            = collision_rectangle(x-(collisionHorizontal-1),
+                                                  y+(collisionVertical+1),
+                                                  x+(collisionHorizontal-1),
+                                                  y+(collisionVertical+1),
+                                                  objBlock,false,true)
+                                                  
+top_collision               = collision_rectangle(x-(collisionHorizontal-1),
+                                                  y-(collisionVertical+1),
+                                                  x+(collisionHorizontal-1),
+                                                  y-(collisionVertical+1),
+                                                  objBlock,false,true)
+                                                  
+right_collision             = collision_rectangle(x+(collisionHorizontal+1),
+                                                  y-(collisionVertical-1),
+                                                  x+(collisionHorizontal+1),
+                                                  y+(collisionVertical-1),
+                                                  objBlock,false,true)
+                                                  
+left_collision              = collision_rectangle(x-(collisionHorizontal+1),
+                                                  y-(collisionVertical-1),
+                                                  x-(collisionHorizontal+1),
+                                                  y+(collisionVertical-1),
+                                                  objBlock,false,true)
+                                                  
 wall_collision              = right_collision != noone || left_collision != noone
 
-
-debug1 = vspeed &gt;= wallFrictionCoefficient*2
-debug2 = vspeed
+debug1 = jumpCount
 
 //Gravity
 if(!bottom_collision){ //if no object is underneath
@@ -105,6 +128,7 @@ if(!bottom_collision){ //if no object is underneath
     if(!wall_collision &amp;&amp; vspeed&lt;maxVspeed)//If free falling  
         vspeed+=grav;
     else{ //If next to a wall
+         jumpCount=0
          if (vspeed &gt;= wallFrictionCoefficient)
             vspeed -=  wallFrictionCoefficient;
          else
@@ -158,37 +182,40 @@ if(keyboard_check(vk_right)&amp;&amp;!right_collision){
         }
 
 //FALL
-if(keyboard_check(vk_down)&amp;&amp; !bottom_collision){ /*collision_line(x-16,y+16,x+16,y+16,objBlock,false,false)*/
+if(keyboard_check(vk_down)&amp;&amp; !bottom_collision){
     if (vspeed&lt;0) vspeed=0;
     //if (vspeed&gt;=maxVspeed)
         vspeed=maxVspeed/2;
         //else
         //vspeed+=vAccel;
 }
-else //JUMP    
-if(jumpCount&lt;maxJumpCount &amp;&amp; keyboard_check(vk_space)&amp;&amp; !top_collision){
-        vspeed=-jumpSpeed;
-        jumpCount+=1;
+
+//JUMP    
+if(jumpCount&lt;maxJumpCount &amp;&amp; keyboard_check_pressed(vk_space) &amp;&amp; !top_collision){
+        if(bottom_collision||!wall_collision)
+           vspeed=-jumpSpeed;
+        if (!wall_collision)
+           jumpCount+=1;
 }
 
 //Horizontal Collision        
-inst = collision_rectangle(x-16+hspeed,y-15,x+16+hspeed,y+15, objBlock, false, false);
+inst = collision_rectangle(x-collisionHorizontal+hspeed,y-(collisionVertical-1),x+collisionHorizontal+hspeed,y+(collisionVertical-1), objBlock, false, false);
 if(inst!=noone &amp;&amp; abs(hspeed)&gt;0){
-    if (hspeed&gt;0) x = inst.x-32;
-    else x = inst.x+32;
+    if (hspeed&gt;0) x = inst.x-((inst.sprite_width/2)+collisionHorizontal);
+    else x = inst.x+((inst.sprite_width/2)+collisionHorizontal);
 //particles(x,y,spriteParticle,0,2,1,10,0,360,.2,2,10);
 hspeed=-hspeed*bounceCoefficient;
 }
 
 //Vertical Collision
-inst = collision_rectangle(x-16,y-15+vspeed,x+15,y+15+vspeed, objBlock, false, false);     
+inst = collision_rectangle(x-(collisionHorizontal-1),y+vspeed-(collisionVertical-1),x+(collisionHorizontal-1),y+vspeed+(collisionVertical-1), objBlock, false, false);
 if(inst!=noone){
-if (vspeed&gt;0){ 
-    y = inst.y-32;
+    if (vspeed&gt;0){ 
+        y = inst.y-((inst.sprite_height/2)+collisionVertical);
     }
-else{ 
-    y = inst.y+32;
-}
+    else{ 
+        y = inst.y+((inst.sprite_height/2)+collisionVertical);
+    }
     if (abs(vspeed)&gt;bounceCoefficient+grav)                     //prevent micro bouncing
         vspeed=-vspeed*bounceCoefficient;
     else
@@ -212,7 +239,7 @@ if(bottom_collision){ /*running animation between 5-14*/
 }
 
 if(bottom_collision==noone &amp;&amp; wall_collision &amp;&amp; vspeed&gt;0){ //wall Slide
-    image_index  = 36;
+    image_index  = 32;
     if (right_collision)   
        image_xscale = -1;
     else
@@ -306,29 +333,59 @@ room_restart()
 draw_sprite_ext(spriteHealth,0,x-20,y-32,.5,.5,0,c_white,1)
 
 //draw_rectangle_colour(x-20,y-32,x-20-(health*.5),y-32,c_red,c_red,c_red,c_red,c_red)
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>debug_draw_left_collision       = 0
+debug_draw_right_collision      = 0
+debug_draw_top_collision        = 0
+debug_draw_bottom_collision     = 0
+debug_draw_horizontal_collision = 0
+debug_draw_vertical_collision   = 0
+debug_draw_debug_1              = 0
+debug_draw_debug_2              = 0
 
 
+if (debug_draw_vertical_collision) 
+   draw_rectangle_colour(x-collisionHorizontal+hspeed,y-(collisionVertical-1),x+collisionHorizontal+hspeed,y+(collisionVertical-1),c_blue,c_blue,c_blue,c_blue,1)
 
-if(!(collision_line(x-16,y+17,x+15,y+17,objBlock,false,false)))
-    if(!(collision_line(x-17,y+17,x+17,y+17,objBlock,false,false)) &amp;&amp; vspeed&lt;maxVspeed)
-        draw_rectangle_colour(x-16,y-16+vspeed,x+16,y+16+vspeed,c_red,c_red,c_red,c_red,1);
-    else
-       draw_rectangle_colour(x-16+hspeed,y-16+vspeed,x+16+hspeed,y+16+vspeed,c_blue,c_blue,c_blue,c_blue,1);
+if (debug_draw_horizontal_collision)
+   draw_rectangle_colour(x-(collisionHorizontal-1),y+vspeed-(collisionVertical-1),x+(collisionHorizontal-1),y+vspeed+(collisionVertical-1),c_blue,c_blue,c_blue,c_blue,1)
+   
+if (debug_draw_bottom_collision)
+   draw_rectangle_colour(x-(collisionHorizontal-1), y+(collisionVertical+1), x+(collisionHorizontal-1), y+(collisionVertical+1), c_red,c_red,c_red,c_red,1);
+   
+if (debug_draw_top_collision)
+   draw_rectangle_colour(x-(collisionHorizontal-1), y-(collisionVertical+1), x+(collisionHorizontal-1), y-(collisionVertical+1), c_red,c_red,c_red,c_red,1);
 
+if (debug_draw_left_collision)
+   draw_rectangle_colour(x-(collisionHorizontal+1), y-(collisionVertical-1), x-(collisionHorizontal+1), y+(collisionVertical-1), c_red,c_red,c_red,c_red,1);
 
-//bottom
-draw_rectangle_colour(x-16,y+17,x+15,y+17,c_green,c_green,c_green,c_green,1);
-//top
-draw_rectangle_colour(x-15,y-16,x+15,y-16,c_green,c_green,c_green,c_green,1);
-//wall
-draw_rectangle_colour(x-17,y+17,x+17,y+17,c_orange,c_orange,c_orange,c_orange,1);
-//right
-draw_rectangle_colour(x+17,y-15,x+17,y+15,c_green,c_green,c_green,c_green,1);
-//left
-draw_rectangle_colour(x-17,y-15,x-17,y+15,c_green,c_green,c_green,c_green,1);
+if (debug_draw_right_collision)
+   draw_rectangle_colour(x+(collisionHorizontal+1), y-(collisionVertical-1), x+(collisionHorizontal+1), y+(collisionVertical-1), c_red,c_red,c_red,c_red,1);
 
-draw_text(x,y-48,debug1);
-draw_text(x,y-64,debug2);
+if (debug_draw_debug_1)
+   draw_text(x,y-48,debug1);
+
+if (debug_draw_debug_2)
+   draw_text(x,y-64,debug2);
 </string>
           </argument>
         </arguments>
