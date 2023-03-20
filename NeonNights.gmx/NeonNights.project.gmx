@@ -14,9 +14,11 @@
     <sprite>sprites\spriteHealth</sprite>
     <sprite>sprites\spriteStamina</sprite>
     <sprite>sprites\spritePower</sprite>
+    <sprite>sprites\sprite8</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\background0</background>
+    <background>background\background1</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">

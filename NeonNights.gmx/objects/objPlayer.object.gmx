@@ -43,7 +43,7 @@ maxHspeed                   = 10;//15;
 hAccelAir                   = .1;
 hAccelGround                = 1;
 maxJumpCount                = 1;
-jumpSpeed                   = 12;//10;
+jumpSpeed                   = 10;//10;
 maxWallJumpCount            = 100;//3;
 wallJumpSpeedV              = 8//5;
 wallJumpSpeedH              = 7.5//5;
@@ -94,7 +94,9 @@ debug2                      = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>bottom_collision            = collision_rectangle(x-(collisionHorizontal-1),
+            <string>/* Collision Detection Code*/
+
+bottom_collision            = collision_rectangle(x-(collisionHorizontal-1),
                                                   y+(collisionVertical+1),
                                                   x+(collisionHorizontal-1),
                                                   y+(collisionVertical+1),
@@ -122,13 +124,35 @@ wall_collision              = right_collision != noone || left_collision != noon
 
 debug1 = jumpCount
 
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/* Physics and movement */
+
 //Gravity
 if(!bottom_collision){ //if no object is underneath
     hAccel=hAccelAir;
     if(!wall_collision &amp;&amp; vspeed&lt;maxVspeed)//If free falling  
         vspeed+=grav;
     else{ //If next to a wall
-         jumpCount=0
          if (vspeed &gt;= wallFrictionCoefficient)
             vspeed -=  wallFrictionCoefficient;
          else
@@ -192,7 +216,7 @@ if(keyboard_check(vk_down)&amp;&amp; !bottom_collision){
 
 //JUMP    
 if(jumpCount&lt;maxJumpCount &amp;&amp; keyboard_check_pressed(vk_space) &amp;&amp; !top_collision){
-        if(bottom_collision||!wall_collision)
+        if(bottom_collision/* &amp;&amp; !wall_collision*/)
            vspeed=-jumpSpeed;
         if (!wall_collision)
            jumpCount+=1;
@@ -203,7 +227,6 @@ inst = collision_rectangle(x-collisionHorizontal+hspeed,y-(collisionVertical-1),
 if(inst!=noone &amp;&amp; abs(hspeed)&gt;0){
     if (hspeed&gt;0) x = inst.x-((inst.sprite_width/2)+collisionHorizontal);
     else x = inst.x+((inst.sprite_width/2)+collisionHorizontal);
-//particles(x,y,spriteParticle,0,2,1,10,0,360,.2,2,10);
 hspeed=-hspeed*bounceCoefficient;
 }
 
@@ -223,8 +246,31 @@ if(inst!=noone){
    
 }
 
-//Animation
-if(bottom_collision){ /*running animation between 5-14*/
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/* Animation */
+
+//Running
+if(bottom_collision){
     if(hspeed!=0){
         image_index += abs(hspeed/maxHspeed);
         image_xscale = abs(hspeed)/hspeed;
@@ -238,7 +284,8 @@ if(bottom_collision){ /*running animation between 5-14*/
     }
 }
 
-if(bottom_collision==noone &amp;&amp; wall_collision &amp;&amp; vspeed&gt;0){ //wall Slide
+//Wall Sliding
+if(bottom_collision==noone &amp;&amp; wall_collision &amp;&amp; vspeed&gt;0){
     image_index  = 32;
     if (right_collision)   
        image_xscale = -1;
@@ -246,14 +293,15 @@ if(bottom_collision==noone &amp;&amp; wall_collision &amp;&amp; vspeed&gt;0){ //
        image_xscale = 1;
 }
 
-if(bottom_collision==noone &amp;&amp; (!wall_collision || vspeed&lt;0 || keyboard_check(vk_down))){ //free fall
-    image_index += 3 * (vspeed+hspeed)/(maxHspeed+maxVspeed);
+//Falling
+if(bottom_collision==noone &amp;&amp; (!wall_collision || vspeed&lt;0 || keyboard_check(vk_down))){
+    image_index += 4 * (vspeed+hspeed)/(maxHspeed);
     
     if (hspeed!=0) 
        image_xscale = hspeed/abs(hspeed);
        
-    if (image_index &gt; 24 || image_index &lt; 23)
-       image_index = 23;
+    if (image_index &gt; 24 || image_index &lt; 23) //33 34
+       image_index = 23; 
     
 }
 </string>
